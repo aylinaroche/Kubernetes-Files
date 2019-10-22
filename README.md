@@ -1,4 +1,4 @@
-# KUBERNETES COMANDS
+# KUBERNETES COMMANDS
 
 ### **Feed a config file to Kubectl**
 
@@ -101,5 +101,5 @@
 # **MININIKUBE START**
 
 > minikube start
->> This command is really important if you turn off your computer, when you start de computer minikube is stopped and you have to start to use kubectl.
+>> This command is really important. If you turn off your computer, the minikube will stop. When you start your computer you have to start minikube to use kubectl.
 

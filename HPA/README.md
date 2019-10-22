@@ -21,6 +21,6 @@ This directory contains a horizontal pods autoscaler. A HPA automatically scales
 
 > kubectl get all
 
-### **Get CPU and Memory of pods*
+### **Get CPU and Memory of pods**
 
 > kubectl top pods

@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-deployment-flask
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: flask
+  template:
+    metadata:
+      labels:
+        component: flask
+    spec:
+      containers:
+      - name: flask
+        image: aylinaroche/flask
+        ports:
+        - containerPort: 5000

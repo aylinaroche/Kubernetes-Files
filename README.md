@@ -55,8 +55,25 @@
 
 > - Manually delete pods to ge the deployment to recreate them with the latest version *(Bad idea)*
 > - Tag built images with a real version number an specify that version in the config file *(Extra step)*
-> - Use an imperative command to update the image version the deployment should use *(The best idea)*
+> - Use an imperative command to update the image version the deployment should use *(A razonable idea)*
+>> - kubectl client-deploy update_version v1
 
+### **Imperative command to update an image**
+
+> kubectl set image [type] / [name] [container-name] = [new-image]
+>
+> #### Parameters
+>
+> - **kubectl:** CLI we use to change our Kubernetes cluster
+> - **set:** We want to change a property
+> - **image:** We want to change the 'image' property
+> - **type:** Specifies the object type 
+> - **name:** Name of object
+> - **container-name:** Name of container that we are updating (get this from config file)
+> - **new-image:** Full name of image to use with tag
+
+> #### Example
+> - kubectl set image deployment/client-deployment client=aylinaroche/myflask:v2
 
 # MINIKUBE COMANDS
 
@@ -67,4 +84,22 @@
 ### **Minikubes status**
 
 > minikube status
+
+### **Configure the VM to user your docker server**
+
+> eval $(minikube docker-env)
+>> This only configures your current terminal window
+
+### **Show logs**
+
+> docker logs [idContainer]
+
+### **Clean images and containers**
+
+> docker system prune -a
+
+# **MININIKUBE START**
+
+> minikube start
+>> This command is really important if you turn off your computer, when you start de computer minikube is stopped and you have to start to use kubectl.
 

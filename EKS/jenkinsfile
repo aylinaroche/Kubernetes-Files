@@ -17,9 +17,9 @@ pipeline {
             steps {
                 dir('/var/lib/jenkins/workspace/Pipeline-EKS/Kubernetes/EKS/Flask'){
                     sh """
-                        export AWS_ACCESS_KEY_ID="ASIAXFHK42N5JJWJUAV4"
-                        export AWS_SECRET_ACCESS_KEY="tbdkCzixmhYzANYIVN22SNLiCFbWf5rgkgrunJgX"
-                        export AWS_SESSION_TOKEN="IQoJb3JpZ2luX2VjEEEaCXVzLXdlc3QtMiJHMEUCIC1O6Dy0jimTPAhirHiXeSDWF+Vn14JskEzF/OVjeKlNAiEAsElFNCHulw2KRrhIE5LT7eiR5HVO7yPui9Cj0jWdNooqigIIShABGgw0OTIyNjYzNzgxMDYiDEwH/JvsAoGLLOJ9airnAQ2pxdVtJrmRx7d1C9HZdqIkeoOMtwhcDZ5tZZ8zOQk+pWEl/zRkcPjfK/uadbdU3rj8GD2Fe1Yz8F9T3xDLHYFHXwFpNoV/UD4O2mEIQa/P3xgxCcmHLdv4mlD8T16Vo/BGlk76IYdqb25d4Mds8gQaAL2czvGPvnoQYJinWPEVcVuDdjfpysEL8rRi+t4LJCUTtYy7lKGR1pXcOUJOanjc9unO6D9js2cWxKdz/e6s3sIvIy21P2JskabI7G3ZOTnYxDL2mYeNZwk1VgE0cqAO8UcfJegoJJmtzzNOCKMI3BxPQrX0DzC6w8ztBTrpAQDlSI5CvMmiu/NcwpTs9aL5ItPrLzZW1hOqIOzZByVCegOd7cW6/NCY/ZgeE1CSSKxFLTOwCMI6NsGg0X2W15KLAicaJ7B0hvN4eH3Tt8jhLA0etcpUfQkXvUWybCeMGb9C8zpMA7VMjqr0Msi59lFaUj8Bi8XlZzzzaY9Y4IfXCix9prCG3Nt0gBX1LJeAXNzrJpMDYr0CrTuMqKsmys+s1jAD584hpLofuwJ5aAPRPFGu+lbu1IhdcJh7FY9cDrjrVimYEN2FjiJRA1UJUERXKhc7WIIwFKUHsiLVzcmH7SbyrpswcFXM"
+                        export AWS_ACCESS_KEY_ID="YOUR_AWS_ACCESS_KEY_ID"
+                        export AWS_SECRET_ACCESS_KEY="YOUR_AWS_SECRET_ACCESS_KEY"
+                        export AWS_SESSION_TOKEN="AWS_AWS_SESSION_TOKEN"
                         export AWS_DEFAULT_REGION=us-west-2                         
                         aws eks update-kubeconfig --name Cluster1-Aylin
                         eksctl version

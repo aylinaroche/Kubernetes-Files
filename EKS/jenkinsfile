@@ -6,57 +6,33 @@ pipeline {
     stages {
         stage('CloneGit') {
             steps {
-                sh "git --version"
-                sh "mkdir -p Docker"
-                dir('/var/lib/jenkins/workspace/Pipeline-Docker/Docker'){
-                    git credentialsId: 'oli', url: 'git@github.com:aylinaroche/Docker-Files.git'
-                }
                 sh "mkdir -p Kubernetes"
-                dir('/var/lib/jenkins/workspace/Pipeline-Docker/Kubernetes'){
+                dir('/var/lib/jenkins/workspace/Pipeline-EKS/Kubernetes'){
                     git credentialsId: 'oli', url: 'git@github.com:aylinaroche/Kubernetes-Files.git'
                 }
                 echo 'SUCCESSFUL CLONE GIT..'
             }
         }
-        stage('Build') {
-            steps {
-                dir('/var/lib/jenkins/workspace/Pipeline-Docker/Docker/flask'){
-                    sh """
-                        ls
-                        docker build -t 'repository-aylin' .
-                        docker images
-                    """
-                }
-                echo 'SUCCESSFUL BUILD..'
-            }
-        }
-        stage('Upload') {
-            steps {
-                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'AWSCredentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-                    sh """
-                        export AWS_ACCESS_KEY_ID="ASIAXFHK42N5JIL5HKNB"
-                        export AWS_SECRET_ACCESS_KEY="3l41e9CklRv8X97yax2TEPrdUA3XfmrISEOwCQac"
-                        export AWS_SESSION_TOKEN="AgoJb3JpZ2luX2VjEBIaCXVzLXdlc3QtMiJHMEUCICTDIp2ofPmBGoFYB1aNR/bC+ZjHIslFVECEySB5rdyFAiEA1IQq95ROkqHwz8PbY15AMjh+P3c/Gku0triclrr0H+Mq0AIIGhABGgw0OTIyNjYzNzgxMDYiDEU1s7rTpKELIHNw1iqtAlU7w7Rs98Hi46RfkehhIjybfyRV99K6Suyl83vWvNv52LUm0zKU4t2/p8bt23+WzlDH7aQ5JBV9t6SJ6RmVE36wyLC4sLwfcL4w0bHfHvkXWdjA7+88F3imrgQ1KN9l6C0bSztV08W3AT4Nsie4IDWbdburLeo266vZiAZUf5vUruLd8BmwROKfk0lq07tCuzRhSC32o/T+VTXkgaOdajPbGuTrEtp1XhUsjgLp7DJGDLvD3YEdymliz3KjgviZTEVXjkq6S8cJ6ZjO/FY6kVyHsS64582Y3KlK+ebcD1zFmZE7Bf8FHmn7kGTPqjHI5p+wk+4ZK+MD3v0uSwxcbIB3lllzoGaRoPlYQp48bAPREIXy2caaJXsVzAfBBnGmGKvp2d98uRF5ltv4fMQw0pbC7QU6tAFJbayn7E4gtYpSm87fTFjl7M27mGdurB5HAS8MYLsoyL6KC0a5hfxNzrLmlE3n7kPvrU5LD7JRM/ss9sAwm9FCI4WpLstD6CnqtxoCGCFZB3+zKyHEnRDtu7XnV3mIvJaUE0AA3Ffl57+j/RkwT2M4Zpw6OThS8f3CYMp6cuR3SSZWtA9O9tPOd1dpe6zyrZZAjD3nZDhSJ+DSRH6ZzQ48G7O4/2f/WyEGfQbkwqqxprkJJa8="
-                        export AWS_DEFAULT_REGION=us-west-2
-                        \$(aws ecr get-login --no-include-email --region us-west-2)
-                        docker tag repository-aylin:latest 492266378106.dkr.ecr.us-west-2.amazonaws.com/repository-aylin:latest
-                        docker push 492266378106.dkr.ecr.us-west-2.amazonaws.com/repository-aylin:latest
-                    """
-                    echo 'SUCCESSFUL UPLOAD..'
-                }
-            }
-        }
         stage('Cluster') {
             steps {
-                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'AWSCredentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
-                    dir('/var/lib/jenkins/workspace/Pipeline-Docker/Kubernetes'){
-                        sh """
-                        export AWS_ACCESS_KEY_ID="ASIAXFHK42N5JIL5HKNB"
-                        export AWS_SECRET_ACCESS_KEY="3l41e9CklRv8X97yax2TEPrdUA3XfmrISEOwCQac"
-                        export AWS_SESSION_TOKEN="AgoJb3JpZ2luX2VjEBIaCXVzLXdlc3QtMiJHMEUCICTDIp2ofPmBGoFYB1aNR/bC+ZjHIslFVECEySB5rdyFAiEA1IQq95ROkqHwz8PbY15AMjh+P3c/Gku0triclrr0H+Mq0AIIGhABGgw0OTIyNjYzNzgxMDYiDEU1s7rTpKELIHNw1iqtAlU7w7Rs98Hi46RfkehhIjybfyRV99K6Suyl83vWvNv52LUm0zKU4t2/p8bt23+WzlDH7aQ5JBV9t6SJ6RmVE36wyLC4sLwfcL4w0bHfHvkXWdjA7+88F3imrgQ1KN9l6C0bSztV08W3AT4Nsie4IDWbdburLeo266vZiAZUf5vUruLd8BmwROKfk0lq07tCuzRhSC32o/T+VTXkgaOdajPbGuTrEtp1XhUsjgLp7DJGDLvD3YEdymliz3KjgviZTEVXjkq6S8cJ6ZjO/FY6kVyHsS64582Y3KlK+ebcD1zFmZE7Bf8FHmn7kGTPqjHI5p+wk+4ZK+MD3v0uSwxcbIB3lllzoGaRoPlYQp48bAPREIXy2caaJXsVzAfBBnGmGKvp2d98uRF5ltv4fMQw0pbC7QU6tAFJbayn7E4gtYpSm87fTFjl7M27mGdurB5HAS8MYLsoyL6KC0a5hfxNzrLmlE3n7kPvrU5LD7JRM/ss9sAwm9FCI4WpLstD6CnqtxoCGCFZB3+zKyHEnRDtu7XnV3mIvJaUE0AA3Ffl57+j/RkwT2M4Zpw6OThS8f3CYMp6cuR3SSZWtA9O9tPOd1dpe6zyrZZAjD3nZDhSJ+DSRH6ZzQ48G7O4/2f/WyEGfQbkwqqxprkJJa8="
-                        export AWS_DEFAULT_REGION=us-west-2    
+                dir('/var/lib/jenkins/workspace/Pipeline-EKS/Kubernetes/EKS/Flask'){
+                    sh """
+                        export AWS_ACCESS_KEY_ID="ASIAXFHK42N5JJWJUAV4"
+                        export AWS_SECRET_ACCESS_KEY="tbdkCzixmhYzANYIVN22SNLiCFbWf5rgkgrunJgX"
+                        export AWS_SESSION_TOKEN="IQoJb3JpZ2luX2VjEEEaCXVzLXdlc3QtMiJHMEUCIC1O6Dy0jimTPAhirHiXeSDWF+Vn14JskEzF/OVjeKlNAiEAsElFNCHulw2KRrhIE5LT7eiR5HVO7yPui9Cj0jWdNooqigIIShABGgw0OTIyNjYzNzgxMDYiDEwH/JvsAoGLLOJ9airnAQ2pxdVtJrmRx7d1C9HZdqIkeoOMtwhcDZ5tZZ8zOQk+pWEl/zRkcPjfK/uadbdU3rj8GD2Fe1Yz8F9T3xDLHYFHXwFpNoV/UD4O2mEIQa/P3xgxCcmHLdv4mlD8T16Vo/BGlk76IYdqb25d4Mds8gQaAL2czvGPvnoQYJinWPEVcVuDdjfpysEL8rRi+t4LJCUTtYy7lKGR1pXcOUJOanjc9unO6D9js2cWxKdz/e6s3sIvIy21P2JskabI7G3ZOTnYxDL2mYeNZwk1VgE0cqAO8UcfJegoJJmtzzNOCKMI3BxPQrX0DzC6w8ztBTrpAQDlSI5CvMmiu/NcwpTs9aL5ItPrLzZW1hOqIOzZByVCegOd7cW6/NCY/ZgeE1CSSKxFLTOwCMI6NsGg0X2W15KLAicaJ7B0hvN4eH3Tt8jhLA0etcpUfQkXvUWybCeMGb9C8zpMA7VMjqr0Msi59lFaUj8Bi8XlZzzzaY9Y4IfXCix9prCG3Nt0gBX1LJeAXNzrJpMDYr0CrTuMqKsmys+s1jAD584hpLofuwJ5aAPRPFGu+lbu1IhdcJh7FY9cDrjrVimYEN2FjiJRA1UJUERXKhc7WIIwFKUHsiLVzcmH7SbyrpswcFXM"
+                        export AWS_DEFAULT_REGION=us-west-2                         
+                        aws eks update-kubeconfig --name Cluster1-Aylin
                         eksctl version
-                        eksctl create cluster \
+                        kubectl version
+                        kubectl delete -f client-deployment.yaml 
+                        kubectl apply -f client-deployment.yaml
+                        kubectl delete -f client-node-port.yaml 
+                        kubectl apply -f client-node-port.yaml 
+                        kubectl get all
+                    """
+                        /*
+                        
+                        eksctl update cluster \
                             --name Cluster1-Aylin \
                             --version 1.14 \
                             --nodegroup-name worker1-aylin \
@@ -65,14 +41,10 @@ pipeline {
                             --nodes-min 1 \
                             --nodes-max 4 \
                             --node-ami auto
-                        """
-                    }
+                            */
                     echo 'SUCCESSFUL UPLOAD..'
                 }
             }
         }
-
-
     }
-
 }
